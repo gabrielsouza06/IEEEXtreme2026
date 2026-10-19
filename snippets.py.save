@@ -1,0 +1,95 @@
+"""
+SNIPPETS ESSENCIAIS DE PYTHON PARA IEEEXTREME / PROGRAMAÇÃO COMPETITIVA
+"""
+
+import sys
+import math
+import bisect
+from collections import deque, Counter, defaultdict
+
+# =====================================================================
+# 1. ENTRADA E SAÍDA RÁPIDA (FAST I/O)
+# =====================================================================
+def fast_input_all():
+    """Lê todas as entradas de uma vez só (útil para arquivos grandes)."""
+    input_data = sys.stdin.read().split()
+    return input_data
+
+def fast_input_line():
+    """Lê uma única linha rapidamente."""
+    return sys.stdin.readline().strip()
+
+
+# =====================================================================
+# 2. MATEMÁTICA E NÚMEROS (MDC, MMC, PRIMOS)
+# =====================================================================
+def mdc(a, b):
+    """MÁXIMO DIVISOR COMUM"""
+    return math.gcd(a, b)
+
+def mmc(a, b):
+    """MÍNIMO MÚLTIPLO COMUM"""
+    return (a * b) // math.gcd(a, b)
+
+def eh_primo(n):
+    """Verifica se um número é primo em O(sqrt(N))"""
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+
+# =====================================================================
+# 3. BUSCA BINÁRIA (USANDO A BIBLIOTECA NATIIVA BISECT)
+# =====================================================================
+def busca_binaria_exemplo(lista_ordenada, elemento):
+    """
+    Encontra a posição de um elemento em uma lista ordenada em O(log N).
+    bisect_left -> Primeira posição onde o elemento pode ser inserido.
+    bisect_right -> Última posição.
+    """
+    pos = bisect.bisect_left(lista_ordenada, elemento)
+    if pos < len(lista_ordenada) and lista_ordenada[pos] == elemento:
+        return pos # Encontrou
+    return -1 # Não encontrou
+
+
+# =====================================================================
+# 4. GRAFOS: REPRESETAÇÃO E BUSCA EM LARGURA (BFS)
+# =====================================================================
+def bfs_caminho_curto(grafo, inicio, objetivo):
+    """
+    Encontra a menor distância entre 'inicio' e 'objetivo' em um grafo.
+    grafo: dicionário no formato { no: [lista_de_vizinhos] }
+    """
+    fila = deque([(inicio, 0)]) # (no_atual, distancia)
+    visitados = {inicio}
+    
+    while fila:
+        no, dist = fila.popleft()
+        if no == objetivo:
+            return dist
+        
+        for vizinho in grafo.get(no, []):
+            if vizinho not in visitados:
+                visitados.add(vizinho)
+                fila.append((vizinho, dist + 1))
+                
+    return -1 # Não encontrou caminho
+
+
+# =====================================================================
+# 5. CONTAGEM RÁPIDA DE FREQUÊNCIA DE ELEMENTOS
+# =====================================================================
+def contar_frequencias(lista):
+    """Retorna um dicionário com a frequência de cada elemento"""
+    return Counter(lista)
+
